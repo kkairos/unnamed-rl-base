@@ -2,64 +2,54 @@ import tcod, tcod.event
 from controls import key_input
 import entity as ec
 import render as re
-import constants
+import constants as cx
 import map
-
-def menu(main_console,menu_console):
-
-	re.draw_con(main_console,menu_console)
-	tcod.console_flush()
-	while True:
-		for event in tcod.event.wait():
-			if event.type == "KEYDOWN":
-				action = key_input(event.sym)
-				move = False
-				exit = False
-				pause = False
-				pause = action.get('pause')
-				exit = action.get('exit')
-				if exit or pause:
-					return
+import menu
 
 def main():
-
-	print(constants.COLORS)
-	
-	printqueue = []
-	printqueue.append("Hallo world!")
-	printqueue.append("Pleasure to meet you.")
-	for line in printqueue:
-		print(line)
 	
 	screen_width = 80
 	screen_height = 25
-	map_w = 80
+	map_w = 60
 	map_h = 21
 	
 	level_map = map.Map(map_w,map_h)
 	
-	player = ec.Entity(int(level_map.width/2),int(level_map.height/2),ord("@"),15,0)
+	player = ec.Entity(int(level_map.width/2),int(level_map.height/2),ord("@"),15,0,10,10,cx.Faction.Player,True,"@dam")
 	
-	npc = ec.Entity(int(level_map.width*3/4),int(level_map.height*1/4),ord("@"),14,0)
+	npc = ec.Entity(int(level_map.width*3/4),int(level_map.height*1/4),ord("@"),14,0,10,10,cx.Faction.Player,True,"Bob")
 	
 	entities = [player,npc]
 	
-	print(str(player.x) + " " + str(player.y) + " " + chr(player.char))
+	for entity in entities:
+		print(entity.block_m)
 	
 	key = tcod.Key()
 	mouse = tcod.Mouse()
 	
-	tcod.console_set_custom_font("courier8x14.png",
+	tcod.console_set_custom_font(cx.FONT_FILE[cx.SETTINGS[1]["sel"]],
 		tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_ASCII_INROW,
 		32,8
 		)
 	main_console = tcod.console_init_root(screen_width, screen_height, "D@N ROGUE", False, 3, "F", True)
 	
 	map_console = tcod.console.Console(map_w, map_h, "F", None)
-	menu_console = tcod.console.Console(map_w, map_h, "F", None)
+	menu_console = tcod.console.Console(30, 19, "F", None)
 	
-	menu_console.print(int(menu_console.width/2),int(menu_console.height/2)-1,"G A M E   P A U S E D",constants.COLORS[15],constants.COLORS[0],tcod.BKGND_DEFAULT,tcod.CENTER)
-	menu_console.print(int(menu_console.width/2),int(menu_console.height/2)+1,"Enter to Resume",constants.COLORS[15],constants.COLORS[0],tcod.BKGND_DEFAULT,tcod.CENTER)
+	message_console = tcod.console.Console(map_w,screen_height-map_h)
+	
+	messages = []
+	for x in range(0,4):
+		messages.append("")
+	printqueue = []
+	printqueue.append("Hallo world!")
+	printqueue.append("Pleasure to meet you.")
+	for line in printqueue:
+		re.messageprint(message_console,line,messages)
+	
+	menu.menu_print(menu_console)
+	
+	re.console_borders(menu_console,0,0,menu_console.width-1,menu_console.height-1)
 	
 	fg_sh = 15
 	bg_sh = 0
@@ -68,7 +58,8 @@ def main():
 	
 		re.draw_map(level_map,map_console)
 		re.draw_all(map_console,entities)
-		re.draw_con(main_console,map_console)
+		re.draw_con(main_console,map_console,0,0)
+		re.draw_con(main_console,message_console,0,main_console.height-message_console.height)
 		tcod.console_flush()
 		re.clear_all(map_console,entities)
 		for event in tcod.event.wait():
@@ -82,11 +73,11 @@ def main():
 				pause = action.get('pause')
 				if move:
 					dx,dy = move
-					player.move(dx,dy,level_map)
+					player.move(dx,dy,level_map,entities,message_console,messages)
 				if exit:
 					return True
 				if pause:
-					menu(main_console,menu_console)
+					menu.menu(main_console,menu_console)
 			elif event.type == "WINDOWCLOSE":
 				return True
 

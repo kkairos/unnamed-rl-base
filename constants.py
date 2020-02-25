@@ -1,3 +1,9 @@
+from enum import Enum
+
+class Faction(Enum):
+	Player = 0
+	Enemy = 1
+
 COLORS = {
 	15 : (255,255,255),
 	14 : (255,255,84),
@@ -16,13 +22,79 @@ COLORS = {
 	1 : (0,0,168),
 	0 : (0,0,0)
 	}
+	
+LINES = {
+	"top-left" : 201,
+	"bottom-right" : 188,
+	"top-right" : 187,
+	"left-right" : 186,
+	"bottom-left" : 200,
+	"top-bottom" : 205
+	}
 
-INPUT_SETTINGS = 0
+SETTINGS = [
+	{
+		"name" : "Control Scheme",
+		"yval" : 3,
+		"sel" : 0,
+		"desc" : "INPUT_SEL"
+	},
+	{
+		"name" : "Font",
+		"yval" : 12,
+		"sel" : 0,
+		"desc" : "FONT_SEL"
+	},
+	{
+		"name" : "Continue Playing [Esc]",
+		"yval" : 15,
+		"sel" : 0,
+		"desc" : "NO_SEL"
+	},
+	{
+		"name" : "Save and Quit",
+		"yval" : 17,
+		"sel" : 0,
+		"desc" : "NO_SEL"
+	}
+	]
 
-"""
-0: numpad + arrows
-1: QWEASDZXC + arrows
-"""
+DESC = {
+	"INPUT_SEL" : [
+	"\nMOVE:     REST: 5,. \n"\
+	"7 8 9               \n"\
+	" \|/                \n"\
+	"4-@-6               \n"\
+	" /|\                \n"\
+	"1 2 3               ",
+	"\nMOVE:     REST: S,. \n"\
+	"Q W E               \n"\
+	" \|/                \n"\
+	"A-@-D               \n"\
+	" /|\                \n"\
+	"Z X C               ",
+	"\nMOVE:     REST: .   \n"\
+	"Y K U               \n"\
+	" \|/                \n"\
+	"H-@-L               \n"\
+	" /|\                \n"\
+	"B J N               "
+	],
+	"FONT_SEL" : [
+	"Classic 437      ",
+#	"Electrum-Thin 437",
+	"Narrow 437       ",
+#	"Bubble 437       "
+	],
+	"NO_SEL" : []
+}
+
+FONT_FILE = [
+	"font-8x14-classic.png",
+#	"font-8x14-thin.png",
+	"font-8x14-narrow.png"#,
+#	"font-8x14-bubble.png"
+	]
 
 TERRAIN = {
 	"wall": {
