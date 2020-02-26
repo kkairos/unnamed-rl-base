@@ -15,11 +15,13 @@ def main():
 	
 	level_map = map.Map(map_w,map_h)
 	
-	player = ec.Entity(int(level_map.width/2),int(level_map.height/2),ord("@"),15,0,10,10,cx.Faction.Player,True,"@dam")
+	player = ec.Entity(int(level_map.width/2),int(level_map.height/2),ord("@"),15,0,10,10,cx.Faction.Ally,True,"You")
 	
-	npc = ec.Entity(int(level_map.width*3/4),int(level_map.height*1/4),ord("@"),14,0,10,10,cx.Faction.Player,True,"Bob")
+	npc = ec.Entity(int(level_map.width*3/4),int(level_map.height*1/4),ord("@"),14,0,10,10,cx.Faction.Ally,True,"")
+
+	ene = ec.Entity(int(level_map.width*2/5),int(level_map.height*3/5),ord("@"),10,0,10,10,cx.Faction.Enemy,True,"Mortimer")
 	
-	entities = [player,npc]
+	entities = [player,npc,ene]
 	
 	for entity in entities:
 		print(entity.block_m)
@@ -41,11 +43,6 @@ def main():
 	messages = []
 	for x in range(0,4):
 		messages.append("")
-	printqueue = []
-	printqueue.append("Hallo world!")
-	printqueue.append("Pleasure to meet you.")
-	for line in printqueue:
-		re.messageprint(message_console,line,messages)
 	
 	menu.menu_print(menu_console)
 	

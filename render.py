@@ -62,3 +62,32 @@ def messageprint(z,s,m):
 		if m[len(m)-1-x] != "":
 			z.print(0,z.height-1-x,"> " + m[len(m)-1-x],constants.COLORS[15],constants.COLORS[0],tcod.BKGND_DEFAULT,tcod.LEFT)
 	print(s)
+	
+def construct_message(
+	self,		#entity acting
+	other,		#entity acted on
+	verb_2p,	#2nd-person verb (w/ spaces)
+	verb_3p,	#3rd-person verb (w/ spaces)
+	act_ext="", #extended description e.g. "for 10 [damage/healing/etc]"
+	val_ins=0,	#value to insert e.g. the 10
+	unit="",	#unit for value (e.g. "HP" for healing)
+	s_end=".",	#ends sentence
+	shortmsg=False
+	):
+
+	if self.dispname == "You":
+		msg = "You" + verb_2p
+	else:
+		if self.dispname == "":
+			msg = "The " + self.faction.name + verb_3p
+		else:
+			msg = self.dispname + verb_3p
+	if shortmsg == False:
+		if other.dispname =="":
+			msg += "the " + self.faction.name
+		else:
+			msg += other.dispname
+		if act_ext != "":
+			msg += act_ext + str(val_ins) + unit
+	msg +=s_end
+	return msg

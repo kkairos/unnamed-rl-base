@@ -1,7 +1,7 @@
 from enum import Enum
 
 class Faction(Enum):
-	Player = 0
+	Ally = 0
 	Enemy = 1
 
 COLORS = {
@@ -82,18 +82,18 @@ DESC = {
 	],
 	"FONT_SEL" : [
 	"Classic 437      ",
-#	"Electrum-Thin 437",
+	#"Electrum-Thin 437",
 	"Narrow 437       ",
-#	"Bubble 437       "
+	"Bubble 437       "
 	],
 	"NO_SEL" : []
 }
 
 FONT_FILE = [
 	"font-8x14-classic.png",
-#	"font-8x14-thin.png",
-	"font-8x14-narrow.png"#,
-#	"font-8x14-bubble.png"
+	#"font-8x14-thin.png",
+	"font-8x14-narrow.png",
+	"font-8x14-bubble.png"
 	]
 
 TERRAIN = {
@@ -103,7 +103,7 @@ TERRAIN = {
 		"char" : ord("#"),
 		"fg" : 7,
 		"bg" : 0,
-		"type" : "wall"
+		"name" : "wall"
 		},
 	"floor" : {
 		"block_m" : False,
@@ -111,6 +111,6 @@ TERRAIN = {
 		"char" : 249,
 		"fg" : 7,
 		"bg" : 0,
-		"type" : "floor"
+		"name" : "floor"
 		}
 	}
