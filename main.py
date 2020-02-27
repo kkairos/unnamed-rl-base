@@ -15,11 +15,13 @@ def main():
 	
 	level_map = map.Map(map_w,map_h)
 	
-	player = ec.Entity(int(level_map.width/2),int(level_map.height/2),ord("@"),15,0,10,10,cx.Faction.Ally,True,"You")
+	map.make_map(level_map)
 	
-	npc = ec.Entity(int(level_map.width*3/4),int(level_map.height*1/4),ord("@"),14,0,10,10,cx.Faction.Ally,True,"")
+	player = ec.Entity(int(level_map.width/2),int(level_map.height/2),ord("@"),15,0,10,10,cx.Faction.Ally,cx.DrawOrder.PLAYER,True,"You")
+	
+	npc = ec.Entity(int(level_map.width*3/4),int(level_map.height*1/4),ord("@"),14,0,10,10,cx.Faction.Ally,cx.DrawOrder.NPC,True,"")
 
-	ene = ec.Entity(int(level_map.width*2/5),int(level_map.height*3/5),ord("@"),10,0,10,10,cx.Faction.Enemy,True,"Mortimer")
+	ene = ec.Entity(int(level_map.width*4/5),int(level_map.height*3/5),ord("@"),10,0,10,10,cx.Faction.Enemy,cx.DrawOrder.NPC,True,"Mortimer")
 	
 	entities = [player,npc,ene]
 	
@@ -38,7 +40,9 @@ def main():
 	map_console = tcod.console.Console(map_w, map_h, "F", None)
 	menu_console = tcod.console.Console(30, 19, "F", None)
 	
-	message_console = tcod.console.Console(map_w,screen_height-map_h)
+	message_console = tcod.console.Console(map_console.width,main_console.height-map_console.height)
+	
+	status_console = tcod.console.Console(main_console.width-map_console.width,main_console.height)
 	
 	messages = []
 	for x in range(0,4):
@@ -53,10 +57,11 @@ def main():
 	
 	while True:
 	
-		re.draw_map(level_map,map_console)
-		re.draw_all(map_console,entities)
-		re.draw_con(main_console,map_console,0,0)
-		re.draw_con(main_console,message_console,0,main_console.height-message_console.height)
+		fov = player.fov(level_map,entities)
+		re.draw_map(level_map, map_console, fov)
+		re.draw_all(level_map,map_console,entities,fov)
+		re.draw_con(main_console,map_console,status_console.width,0)
+		re.draw_con(main_console,message_console,status_console.width,main_console.height-message_console.height)
 		tcod.console_flush()
 		re.clear_all(map_console,entities)
 		for event in tcod.event.wait():

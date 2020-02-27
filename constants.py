@@ -4,6 +4,11 @@ class Faction(Enum):
 	Ally = 0
 	Enemy = 1
 
+class DrawOrder(Enum):
+	FLOOR = 0
+	NPC = 1
+	PLAYER = 2
+
 COLORS = {
 	15 : (255,255,255),
 	14 : (255,255,84),
@@ -100,7 +105,7 @@ TERRAIN = {
 	"wall": {
 		"block_m" : True,
 		"block_s" : True,
-		"char" : ord("#"),
+		"char" : 178,
 		"fg" : 7,
 		"bg" : 0,
 		"name" : "wall"
@@ -110,6 +115,22 @@ TERRAIN = {
 		"block_s" : False,
 		"char" : 249,
 		"fg" : 7,
+		"bg" : 0,
+		"name" : "floor"
+		},
+	"fence" : {
+		"block_m" : True,
+		"block_s" : False,
+		"char" : ord("#"),
+		"fg" : 6,
+		"bg" : 0,
+		"name" : "floor"
+		},
+	"ground" : {
+		"block_m" : False,
+		"block_s" : False,
+		"char" : ord(","),
+		"fg" : 2,
 		"bg" : 0,
 		"name" : "floor"
 		}

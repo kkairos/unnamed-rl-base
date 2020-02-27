@@ -1,5 +1,6 @@
 import constants as cx
 import render as re
+import math
 
 class Entity:
 
@@ -9,6 +10,7 @@ class Entity:
 			fg = 15,bg = 0,
 			hp = 10,speed = 10,
 			faction = cx.Faction.Enemy,
+			draw_order = cx.DrawOrder.NPC,
 			block_m = True,
 			dispname = ""):
 		self.x = x
@@ -18,8 +20,11 @@ class Entity:
 		self.bg = bg
 		self.stats = Stats(hp,speed)
 		self.block_m = block_m
+		self.block_s = False
 		self.faction = faction
 		self.dispname = dispname
+		self.draw_order = draw_order
+		self.sightrange = 8
 		
 	def move(self,dx,dy,map,entities,message_console,messages):
 		if (self.x+dx > -1 and self.x+dx < map.width and self.y+dy > -1 and self.y+dy < map.height):
@@ -39,7 +44,8 @@ class Entity:
 	def talk(self,other,message_console,messages):
 
 		message = re.construct_message(self,other," talk to ", " talks to ")
-		re.messageprint(message_console,message,messages)
+		if message != "":
+			re.messageprint(message_console,message,messages)
 	
 	def attack(self,other,message_console,messages):
 	
@@ -50,8 +56,50 @@ class Entity:
 			message += " " + re.construct_message(other,other," die"," dies","",0,"","!",True)
 			other.block_m = False
 			other.char = ord("%")
-		re.messageprint(message_console,message,messages)
+			other.draw_order = cx.DrawOrder.FLOOR
+		if message != "":
+			re.messageprint(message_console,message,messages)
+	
+	def fov(self,map,entities):
+	
+		fov = [[False for y in range(map.height)] for x in range(map.width)]
+		eblock = [[False for y in range(map.height)] for x in range(map.width)]
 		
+		for y in range(map.height):
+			for x in range(map.width):
+				fov[x][y] = False
+				eblock[x][y] = False
+
+		radius = self.sightrange
+		
+		for en in entities:
+			if (en.block_s == True) and (e != self):
+				eblock[en.x][en.y] = True
+
+		for theta in range(720):
+			theta = math.radians(float(theta/2))
+			xd_i = float(self.x+0.5)
+			yd_i = float(self.y+0.5)
+			xd_d = float(math.cos(theta))
+			yd_d = float(math.sin(theta))
+			fov[self.x][self.y] = True
+			map.t_[self.x][self.y].explored = True
+			
+			for r in range(radius):
+				xd_i+=xd_d
+				yd_i+=yd_d
+				if (int(xd_i) < 0) or (int(yd_i) < 0) or (int(xd_i) > map.width-1) or (int(yd_i) > map.height-1):
+					break
+#				try:
+				fov[int(xd_i)][int(yd_i)] = True
+				map.t_[int(xd_i)][int(yd_i)].explored = True
+				if (map.t_[int(xd_i)][int(yd_i)].block_s == True) or (eblock[int(xd_i)][int(yd_i)] == True):
+					break
+#				except IndexError:
+#					break
+		
+		return fov
+	
 def blocking_entity(entities,x,y):
 	for entity in entities:
 		if ((entity.x == x) and (entity.y == y) and entity.block_m):
