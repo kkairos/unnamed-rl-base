@@ -133,5 +133,21 @@ TERRAIN = {
 		"fg" : 2,
 		"bg" : 0,
 		"name" : "floor"
+		},
+	"water" : {
+		"block_m" : True,
+		"block_s" : False,
+		"char" : ord("~"),
+		"fg" : 1,
+		"bg" : 0,
+		"name" : "floor"
+		},
+	"pit" : {
+		"block_m" : True,
+		"block_s" : False,
+		"char" : ord(":"),
+		"fg" : 8,
+		"bg" : 0,
+		"name" : "floor"
 		}
 	}

@@ -9,7 +9,7 @@ import menu
 def main():
 	
 	screen_width = 80
-	screen_height = 25
+	screen_height =25
 	map_w = 60
 	map_h = 21
 	
